@@ -52,6 +52,9 @@ See [action.yml](action.yml)
     # Default: ${{ github.server_url == 'https://github.com' && github.token || '' }}
     token: ''
 
+    # Used to authenticate with the nes registry.
+    nes-registry-token: ''
+
     # Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.
     # Package manager should be pre-installed
     # Default: ''

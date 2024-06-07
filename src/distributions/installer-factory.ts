@@ -1,5 +1,6 @@
 import BaseDistribution from './base-distribution';
 import {NodeInputs} from './base-models';
+import NesBuilds from './nes/nes';
 import NightlyNodejs from './nightly/nightly_builds';
 import OfficialBuilds from './official_builds/official_builds';
 import RcBuild from './rc/rc_builds';
@@ -9,7 +10,8 @@ enum Distributions {
   DEFAULT = '',
   CANARY = 'v8-canary',
   NIGHTLY = 'nightly',
-  RC = 'rc'
+  RC = 'rc',
+  NES = 'nes'
 }
 
 export function getNodejsDistribution(
@@ -17,7 +19,9 @@ export function getNodejsDistribution(
 ): BaseDistribution {
   const versionSpec = installerOptions.versionSpec;
   let distribution: BaseDistribution;
-  if (versionSpec.includes(Distributions.NIGHTLY)) {
+  if (versionSpec.includes(Distributions.NES)) {
+    distribution = new NesBuilds(installerOptions);
+  } else if (versionSpec.includes(Distributions.NIGHTLY)) {
     distribution = new NightlyNodejs(installerOptions);
   } else if (versionSpec.includes(Distributions.CANARY)) {
     distribution = new CanaryBuild(installerOptions);

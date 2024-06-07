@@ -4,6 +4,7 @@ export interface NodeInputs {
   auth?: string;
   checkLatest: boolean;
   stable: boolean;
+  nesRegistryToken?: string;
 }
 
 export interface INodeVersionInfo {

@@ -40,10 +40,13 @@ export async function run() {
         (core.getInput('stable') || 'true').toUpperCase() === 'TRUE';
       const checkLatest =
         (core.getInput('check-latest') || 'false').toUpperCase() === 'TRUE';
+
+      const nesRegistryToken = core.getInput('nes-registry-token');
       const nodejsInfo = {
         versionSpec: version,
         checkLatest,
         auth,
+        nesRegistryToken,
         stable,
         arch
       };
