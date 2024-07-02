@@ -7,7 +7,10 @@ fi
 
 node_version="$(node --version)"
 echo "Found node version '$node_version'"
-if [ -z "$(echo $node_version | grep --fixed-strings v$1)" ]; then
+
+# Remove '-nes' suffix if present
+cleaned_version=$(echo $node_version | sed 's/-nes//')
+if [ -z "$(echo $cleaned_version | grep --fixed-strings v$1)" ]; then
   echo "Unexpected version"
   exit 1
 fi

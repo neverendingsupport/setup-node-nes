@@ -93822,6 +93822,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getNodejsDistribution = void 0;
+const nes_1 = __importDefault(__nccwpck_require__(2330));
 const nightly_builds_1 = __importDefault(__nccwpck_require__(7127));
 const official_builds_1 = __importDefault(__nccwpck_require__(7854));
 const rc_builds_1 = __importDefault(__nccwpck_require__(8837));
@@ -93832,11 +93833,15 @@ var Distributions;
     Distributions["CANARY"] = "v8-canary";
     Distributions["NIGHTLY"] = "nightly";
     Distributions["RC"] = "rc";
+    Distributions["NES"] = "nes";
 })(Distributions || (Distributions = {}));
 function getNodejsDistribution(installerOptions) {
     const versionSpec = installerOptions.versionSpec;
     let distribution;
-    if (versionSpec.includes(Distributions.NIGHTLY)) {
+    if (versionSpec.includes(Distributions.NES)) {
+        distribution = new nes_1.default(installerOptions);
+    }
+    else if (versionSpec.includes(Distributions.NIGHTLY)) {
         distribution = new nightly_builds_1.default(installerOptions);
     }
     else if (versionSpec.includes(Distributions.CANARY)) {
@@ -93851,6 +93856,100 @@ function getNodejsDistribution(installerOptions) {
     return distribution;
 }
 exports.getNodejsDistribution = getNodejsDistribution;
+
+
+/***/ }),
+
+/***/ 2330:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const base_distribution_1 = __importDefault(__nccwpck_require__(7));
+const tc = __importStar(__nccwpck_require__(7784));
+const core = __importStar(__nccwpck_require__(2186));
+class NesBuilds extends base_distribution_1.default {
+    constructor(nodeInfo) {
+        super(nodeInfo);
+        this.distribution = 'nes';
+        this.nesRegistryToken = nodeInfo.nesRegistryToken;
+        if (!this.nesRegistryToken) {
+            throw new Error('NES registry token is required to download Node.js from NES registry');
+        }
+    }
+    getDistributionUrl() {
+        return 'https://registry.dev.nes.herodevs.com/nodejs/nes';
+    }
+    getNodeJsVersions() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const initialUrl = this.getDistributionUrl();
+            const dataUrl = `${initialUrl}/index.json`;
+            const response = yield this.httpClient.getJson(dataUrl, {
+                Authorization: `Bearer ${this.nesRegistryToken}`
+            });
+            return response.result || [];
+        });
+    }
+    downloadNodejs(info) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let downloadPath = '';
+            core.info(`Acquiring ${info.resolvedVersion} - ${info.arch} from ${info.downloadUrl}`);
+            try {
+                downloadPath = yield tc.downloadTool(info.downloadUrl, undefined, undefined, {
+                    Authorization: `Bearer ${this.nesRegistryToken}`
+                });
+            }
+            catch (err) {
+                if (err instanceof tc.HTTPError &&
+                    err.httpStatusCode == 404 &&
+                    this.osPlat == 'win32') {
+                    return yield this.acquireWindowsNodeFromFallbackLocation(info.resolvedVersion, info.arch);
+                }
+                throw err;
+            }
+            const toolPath = yield this.extractArchive(downloadPath, info);
+            core.info('Done');
+            return toolPath;
+        });
+    }
+}
+exports["default"] = NesBuilds;
 
 
 /***/ }),
@@ -94232,10 +94331,12 @@ function run() {
                 const auth = !token ? undefined : `token ${token}`;
                 const stable = (core.getInput('stable') || 'true').toUpperCase() === 'TRUE';
                 const checkLatest = (core.getInput('check-latest') || 'false').toUpperCase() === 'TRUE';
+                const nesRegistryToken = core.getInput('nes-registry-token');
                 const nodejsInfo = {
                     versionSpec: version,
                     checkLatest,
                     auth,
+                    nesRegistryToken,
                     stable,
                     arch
                 };

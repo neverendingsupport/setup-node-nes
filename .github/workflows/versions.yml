@@ -276,3 +276,21 @@ jobs:
         run: |
           echo "Latest node version failed to download."
           exit 1
+  check-nes:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [16-nes]
+        nes-registry-token: ${{ secrets.NES_REGISTRY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node and check latest
+        uses: ./
+        with:
+          node-version: ${{ matrix.node-version }}
+          check-latest: true
+      - name: Verify node and npm
+        run: __tests__/verify-node.sh "${{ matrix.node-version }}"
+        shell: bash
