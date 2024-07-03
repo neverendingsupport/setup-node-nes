@@ -1,9 +1,4 @@
-# setup-node
-
-[![basic-validation](https://github.com/actions/setup-node/actions/workflows/basic-validation.yml/badge.svg)](https://github.com/actions/setup-node/actions/workflows/basic-validation.yml)
-[![versions](https://github.com/actions/setup-node/actions/workflows/versions.yml/badge.svg)](https://github.com/actions/setup-node/actions/workflows/versions.yml)
-[![e2e-cache](https://github.com/actions/setup-node/actions/workflows/e2e-cache.yml/badge.svg?branch=main)](https://github.com/actions/setup-node/actions/workflows/e2e-cache.yml)
-[![proxy](https://github.com/actions/setup-node/actions/workflows/proxy.yml/badge.svg)](https://github.com/actions/setup-node/actions/workflows/proxy.yml)
+# setup-node-nes
 
 This action provides the following functionality for GitHub Actions users:
 
@@ -18,7 +13,7 @@ See [action.yml](action.yml)
 
 <!-- start usage -->
 ```yaml
-- uses: actions/setup-node@v4
+- uses: actions/setup-node-nes@v4
   with:
     # Version Spec of the version to use in SemVer notation.
     # It also emits such aliases as lts, latest, nightly and canary builds
@@ -87,7 +82,7 @@ See [action.yml](action.yml)
 ```yaml
 steps:
 - uses: actions/checkout@v4
-- uses: actions/setup-node@v4
+- uses: actions/setup-node-nes@v4
   with:
     node-version: 18
 - run: npm ci
@@ -136,7 +131,7 @@ See the examples of using cache for `yarn`/`pnpm` and `cache-dependency-path` in
 ```yaml
 steps:
 - uses: actions/checkout@v4
-- uses: actions/setup-node@v4
+- uses: actions/setup-node-nes@v4
   with:
     node-version: 20
     cache: 'npm'
@@ -149,7 +144,7 @@ steps:
 ```yaml
 steps:
 - uses: actions/checkout@v4
-- uses: actions/setup-node@v4
+- uses: actions/setup-node-nes@v4
   with:
     node-version: 20
     cache: 'npm'
@@ -171,21 +166,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node-nes@v4
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci
       - run: npm test
 ```
 
-## Using `setup-node` on GHES
+## Using `setup-node-nes` on GHES
 
-`setup-node` comes pre-installed on the appliance with GHES if Actions is enabled. When dynamically downloading Nodejs distributions, `setup-node` downloads distributions from [`actions/node-versions`](https://github.com/actions/node-versions) on github.com (outside of the appliance). These calls to `actions/node-versions` are made via unauthenticated requests, which are limited to [60 requests per hour per IP](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting). If more requests are made within the time frame, then you will start to see rate-limit errors during downloading that looks like: `##[error]API rate limit exceeded for...`. After that error the action will try to download versions directly from the official site, but it also can have rate limit so it's better to put token.
+`setup-node-nes` comes pre-installed on the appliance with GHES if Actions is enabled. When dynamically downloading Nodejs distributions, `setup-node-nes` downloads distributions from [`actions/node-versions`](https://github.com/actions/node-versions) on github.com (outside of the appliance). These calls to `actions/node-versions` are made via unauthenticated requests, which are limited to [60 requests per hour per IP](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting). If more requests are made within the time frame, then you will start to see rate-limit errors during downloading that looks like: `##[error]API rate limit exceeded for...`. After that error the action will try to download versions directly from the official site, but it also can have rate limit so it's better to put token.
 
 To get a higher rate limit, you can [generate a personal access token on github.com](https://github.com/settings/tokens/new) and pass it as the `token` input for the action:
 
 ```yaml
-uses: actions/setup-node@v4
+uses: actions/setup-node-nes@v4
 with:
   token: ${{ secrets.GH_DOTCOM_TOKEN }}
   node-version: 20
