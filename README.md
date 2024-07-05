@@ -13,7 +13,7 @@ See [action.yml](action.yml)
 
 <!-- start usage -->
 ```yaml
-- uses:  neverendingsupport/setup-node-nes@v4.0.3
+- uses: neverendingsupport/setup-node-nes@v4.0.3
   with:
     # Version Spec of the version to use in SemVer notation.
     # It also emits such aliases as lts, latest, nightly and canary builds
