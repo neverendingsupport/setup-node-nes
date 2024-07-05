@@ -1,8 +1,8 @@
 {
-  "name": "setup-node",
+  "name": "setup-nod-nes",
   "version": "4.0.0",
   "private": true,
-  "description": "setup node action",
+  "description": "setup node action nes",
   "main": "lib/setup-node.js",
   "scripts": {
     "build": "ncc build -o dist/setup src/setup-node.ts && ncc build -o dist/cache-save src/cache-save.ts",

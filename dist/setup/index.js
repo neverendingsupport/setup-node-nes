@@ -93791,8 +93791,10 @@ class BaseDistribution {
         const versions = [];
         const dataFileName = this.getDistFileName();
         nodeJsVersions.forEach((nodeVersion) => {
+            var _a;
+            console.log(`nodeVersion: ${JSON.stringify(nodeVersion)}`);
             // ensure this version supports your os and platform
-            if (nodeVersion.files.indexOf(dataFileName) >= 0) {
+            if (((_a = nodeVersion === null || nodeVersion === void 0 ? void 0 : nodeVersion.files) === null || _a === void 0 ? void 0 : _a.indexOf(dataFileName)) >= 0) {
                 versions.push(nodeVersion.version);
             }
         });

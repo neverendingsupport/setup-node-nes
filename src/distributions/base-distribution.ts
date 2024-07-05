@@ -295,8 +295,9 @@ export default abstract class BaseDistribution {
     const dataFileName = this.getDistFileName();
 
     nodeJsVersions.forEach((nodeVersion: INodeVersion) => {
+      console.log(`nodeVersion: ${JSON.stringify(nodeVersion)}`);
       // ensure this version supports your os and platform
-      if (nodeVersion.files.indexOf(dataFileName) >= 0) {
+      if (nodeVersion?.files?.indexOf(dataFileName) >= 0) {
         versions.push(nodeVersion.version);
       }
     });
