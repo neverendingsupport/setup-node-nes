@@ -93904,6 +93904,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const base_distribution_1 = __importDefault(__nccwpck_require__(7));
 const tc = __importStar(__nccwpck_require__(7784));
 const core = __importStar(__nccwpck_require__(2186));
+const semver_1 = __importDefault(__nccwpck_require__(1383));
 class NesBuilds extends base_distribution_1.default {
     constructor(nodeInfo) {
         super(nodeInfo);
@@ -93947,6 +93948,48 @@ class NesBuilds extends base_distribution_1.default {
             core.info('Done');
             return toolPath;
         });
+    }
+    getNodejsDistInfo(version) {
+        const osArch = this.translateArchToDistUrl(this.nodeInfo.arch);
+        version = semver_1.default.clean(version) || '';
+        const fileName = this.osPlat == 'win32'
+            ? `node-v${version}-nes-win-${osArch}`
+            : `node-v${version}-nes-${this.osPlat}-${osArch}`;
+        const urlFileName = this.osPlat == 'win32'
+            ? this.nodeInfo.arch === 'arm64'
+                ? `${fileName}.zip`
+                : `${fileName}.7z`
+            : `${fileName}.tar.gz`;
+        const initialUrl = this.getDistributionUrl();
+        const url = `${initialUrl}/v${version}-nes/${urlFileName}`;
+        return {
+            downloadUrl: url,
+            resolvedVersion: version,
+            arch: osArch,
+            fileName: fileName
+        };
+    }
+    validRange(versionSpec) {
+        let range;
+        const [raw, nes] = this.splitVersionSpec(versionSpec);
+        const isValidVersion = semver_1.default.valid(raw);
+        const rawVersion = (isValidVersion ? raw : semver_1.default.coerce(raw));
+        if (nes !== this.distribution) {
+            range = versionSpec;
+        }
+        else {
+            range = `${semver_1.default.validRange(`^${rawVersion}`)}-${this.distribution}`;
+        }
+        return { range, options: { includePrerelease: false } };
+    }
+    splitVersionSpec(versionSpec) {
+        const match = versionSpec.match(/^(.*?)-(.+)$/);
+        if (match) {
+            return [match[1], match[2]];
+        }
+        else {
+            return [versionSpec, ''];
+        }
     }
 }
 exports["default"] = NesBuilds;
