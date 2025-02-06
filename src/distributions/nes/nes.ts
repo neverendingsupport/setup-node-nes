@@ -18,7 +18,7 @@ export default class NesBuilds extends BaseDistribution {
   }
 
   protected getDistributionUrl(): string {
-    return 'https://registry.dev.nes.herodevs.com/nodejs/nes';
+    return 'https://registry.nes.herodevs.com/nodejs/nes';
   }
 
   protected async getNodeJsVersions(): Promise<INodeVersion[]> {

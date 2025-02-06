@@ -201,7 +201,7 @@ describe('setup-node', () => {
     os.platform = 'linux';
     os.arch = 'x64';
 
-    const versionSpec = '16.20.0-nes';
+    const versionSpec = '300.20.0-nes';
     inputs['node-version'] = versionSpec;
     inputs['nes-registry-token'] = 'faketoken';
 
@@ -265,7 +265,7 @@ describe('setup-node', () => {
       inputs['always-auth'] = false;
       inputs['nes-registry-token'] = 'faketoken';
 
-      const expectedUrl = `https://registry.dev.nes.herodevs.com/nodejs/nes/v${version}/node-v${version}-${platform}-${arch}.${fileExtension}`;
+      const expectedUrl = `https://registry.nes.herodevs.com/nodejs/nes/v${version}/node-v${version}-${platform}-${arch}.${fileExtension}`;
 
       // ... but not in the local cache
       findSpy.mockImplementation(() => '');
@@ -279,7 +279,7 @@ describe('setup-node', () => {
       await main.run();
       expect(dlSpy).toHaveBeenCalled();
       expect(logSpy).toHaveBeenCalledWith(
-        `Acquiring ${version} - ${arch} from ${expectedUrl}`
+        `Acquiring ${version.replace('-nes', '')} - ${arch} from ${expectedUrl}`
       );
     }
   }, 100000);
@@ -289,7 +289,7 @@ describe('setup-node', () => {
       [
         '16.20.2-nes',
         '16.20.2-nes',
-        'https://registry.dev.nes.herodevs.com/nodejs/nes/v16.20.2-nes/node-v16.20.2-nes-linux-x64.tar.gz'
+        'https://registry.nes.herodevs.com/nodejs/nes/v16.20.2-nes/node-v16.20.2-nes-linux-x64.tar.gz'
       ]
     ])(
       'finds the versions in the index.json and installs it',
@@ -319,7 +319,7 @@ describe('setup-node', () => {
     );
 
     it('throws an error if version is not found', async () => {
-      const versionSpec = 'v19.0.0-nes';
+      const versionSpec = 'v300.0.0-nes';
 
       findSpy.mockImplementation(() => '');
       findAllVersionsSpy.mockImplementation(() => []);
