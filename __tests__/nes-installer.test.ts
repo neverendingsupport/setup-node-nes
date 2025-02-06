@@ -289,7 +289,8 @@ describe('setup-node', () => {
       [
         '16.20.2-nes',
         '16.20.2-nes',
-        'https://registry.dev.nes.herodevs.com/nodejs/nes/v16.20.2-nes/node-v16.20.2-nes-linux-x64.tar.gz'
+        'https://registry.dev.nes.herodevs.com/nodejs/nes/v16.20.2-nes/node-v16.20.2-nes-linux-x64.tar.gz',
+        '16-nes'
       ]
     ])(
       'finds the versions in the index.json and installs it',
