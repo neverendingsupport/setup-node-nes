@@ -15,17 +15,17 @@ jobs:
   test-proxy:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:latest
+      image: index.docker.io/library/ubuntu@sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7072feef0c # ratchet:ubuntu:latest
       options: --dns 127.0.0.1
     services:
       squid-proxy:
-        image: ubuntu/squid:latest
+        image: index.docker.io/ubuntu/squid@sha256:6a097f68bae708cedbabd6188d68c7e2e7a38cedd05a176e1cc0ba29e3bbe029 # ratchet:ubuntu/squid:latest
         ports:
           - 3128:3128
     env:
       https_proxy: http://squid-proxy:3128
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # ratchet:actions/checkout@v4
       - name: Clear tool cache
         run: rm -rf $RUNNER_TOOL_CACHE/*
       - name: Setup node 14
@@ -41,7 +41,7 @@ jobs:
       https_proxy: http://no-such-proxy:3128
       no_proxy: api.github.com,github.com,nodejs.org,registry.npmjs.org,*.s3.amazonaws.com,s3.amazonaws.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # ratchet:actions/checkout@v4
       - name: Clear tool cache
         run: rm -rf $RUNNER_TOOL_CACHE/*
       - name: Setup node 11
